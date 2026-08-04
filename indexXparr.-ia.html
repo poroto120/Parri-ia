@@ -1,0 +1,1180 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>parr-IA — Termómetro inteligente con IA</title>
+
+  <meta
+    name="description"
+    content="parr-IA es una microempresa que crea un termómetro inteligente con IA para encontrar el punto de cocción perfecto de cada corte de carne."
+  />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  />
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    :root {
+      --background: #241d19;
+      --foreground: #f6efe8;
+      --card: #302722;
+      --muted-foreground: #b8a89c;
+      --border: #493d36;
+      --ember: #e8622a;
+      --ember-glow: #f2a24a;
+
+      --gradient-ember: linear-gradient(
+        135deg,
+        var(--ember),
+        var(--ember-glow)
+      );
+
+      --shadow-ember:
+        0 20px 60px -20px rgba(232, 98, 42, 0.45);
+
+      --font-display:
+        "Bebas Neue",
+        system-ui,
+        sans-serif;
+
+      --font-body:
+        "Barlow",
+        system-ui,
+        sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 100px;
+    }
+
+    body {
+      margin: 0;
+      background: var(--background);
+      color: var(--foreground);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1,
+    h2,
+    h3,
+    .display {
+      margin: 0;
+      font-family: var(--font-display);
+      font-weight: 400;
+      letter-spacing: 0.02em;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .wrap {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ENCABEZADO */
+
+    header {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 20;
+      background: rgba(36, 29, 25, 0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(73, 61, 54, 0.6);
+    }
+
+    header .wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 12px 24px;
+    }
+
+    .marca {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .logo-salesianito {
+      width: 58px;
+      height: 58px;
+      object-fit: contain;
+      background: white;
+      border-radius: 8px;
+      padding: 3px;
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 26px;
+      letter-spacing: 0.18em;
+      white-space: nowrap;
+    }
+
+    .ember {
+      color: var(--ember);
+    }
+
+    nav {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 17px;
+      color: var(--muted-foreground);
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    nav a {
+      white-space: nowrap;
+    }
+
+    nav a:hover {
+      color: var(--foreground);
+    }
+
+    /* BOTONES */
+
+    .btn {
+      display: inline-block;
+      padding: 12px 28px;
+      background-image: var(--gradient-ember);
+      color: #241d19;
+      border-radius: 999px;
+      box-shadow: var(--shadow-ember);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      transition: transform 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+    }
+
+    .btn.sm {
+      flex-shrink: 0;
+      padding: 8px 20px;
+      font-size: 13px;
+    }
+
+    .btn.ghost {
+      background-image: none;
+      color: var(--foreground);
+      border: 1px solid var(--border);
+      box-shadow: none;
+    }
+
+    .btn.ghost:hover {
+      background: var(--card);
+    }
+
+    /* INICIO */
+
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+    }
+
+    .hero > img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hero .smoke {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(36, 29, 25, 0.15) 0%,
+        rgba(36, 29, 25, 0.8) 55%,
+        var(--background) 100%
+      );
+    }
+
+    .hero .wrap {
+      position: relative;
+      width: 100%;
+      padding: 180px 24px 96px;
+    }
+
+    .eyebrow {
+      margin: 0 0 16px;
+      color: var(--ember);
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.35em;
+    }
+
+    h1 {
+      max-width: 900px;
+      font-size: clamp(44px, 9vw, 104px);
+      line-height: 0.95;
+    }
+
+    .lead {
+      max-width: 650px;
+      margin-top: 24px;
+      color: var(--muted-foreground);
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    .problem-box {
+      max-width: 760px;
+      margin-top: 24px;
+      padding: 18px 22px;
+      background: rgba(48, 39, 34, 0.88);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--ember);
+      border-radius: 10px;
+      line-height: 1.6;
+    }
+
+    .problem-box strong {
+      color: var(--ember-glow);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 36px;
+    }
+
+    /* SECCIONES */
+
+    section.pad {
+      padding: 96px 0;
+    }
+
+    h2 {
+      font-size: clamp(34px, 5vw, 52px);
+    }
+
+    .section-description {
+      max-width: 750px;
+      margin: 16px 0 0;
+      color: var(--muted-foreground);
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    .grid {
+      display: grid;
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .cols-2 {
+      grid-template-columns:
+        repeat(auto-fit, minmax(300px, 1fr));
+    }
+
+    .cols-3 {
+      grid-template-columns:
+        repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .cols-4 {
+      grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .card {
+      padding: 30px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      transition:
+        border-color 0.2s ease,
+        transform 0.2s ease;
+    }
+
+    .card:hover {
+      border-color: var(--ember);
+      transform: translateY(-4px);
+    }
+
+    .card .num {
+      color: var(--ember);
+      font-family: var(--font-display);
+      font-size: 38px;
+    }
+
+    .card h3 {
+      margin-top: 12px;
+      font-size: 26px;
+    }
+
+    .card p {
+      margin: 8px 0 0;
+      color: var(--muted-foreground);
+      line-height: 1.6;
+    }
+
+    .bar {
+      width: 40px;
+      height: 4px;
+      margin-bottom: 20px;
+      background-image: var(--gradient-ember);
+      border-radius: 999px;
+    }
+
+    .band {
+      background: rgba(48, 39, 34, 0.5);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr;
+      align-items: center;
+      gap: 48px;
+      padding: 96px 24px;
+    }
+
+    .split img {
+      width: 100%;
+      height: auto;
+      border-radius: 18px;
+      box-shadow: var(--shadow-ember);
+    }
+
+    .points {
+      margin: 32px 0 0;
+      padding: 0;
+      list-style: none;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .points li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .points li:first-child {
+      border-top: 0;
+    }
+
+    .points .temp {
+      color: var(--ember);
+      font-family: var(--font-display);
+      font-size: 22px;
+    }
+
+    .objective-list {
+      margin: 18px 0 0;
+      padding-left: 22px;
+      color: var(--muted-foreground);
+      line-height: 1.8;
+    }
+
+    .objective-list li::marker {
+      color: var(--ember);
+    }
+
+    .conclusion {
+      margin-top: 40px;
+      padding: 36px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--ember);
+      border-radius: 14px;
+    }
+
+    .conclusion p {
+      margin: 0;
+      color: var(--muted-foreground);
+      font-size: 18px;
+      line-height: 1.7;
+    }
+
+    .conclusion p + p {
+      margin-top: 18px;
+    }
+
+    /* INTEGRANTES */
+
+    .member-card {
+      text-align: center;
+    }
+
+    .member-icon {
+      width: 65px;
+      height: 65px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 18px;
+      background-image: var(--gradient-ember);
+      color: #241d19;
+      border-radius: 50%;
+      font-family: var(--font-display);
+      font-size: 25px;
+    }
+
+    .member-card h3 {
+      margin-top: 0;
+    }
+
+    .member-role {
+      color: var(--ember-glow) !important;
+      font-weight: 600;
+    }
+
+    /* CONTACTO */
+
+    .center {
+      text-align: center;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 440px;
+      margin: 32px auto 0;
+    }
+
+    input[type="email"] {
+      flex: 1;
+      padding: 13px 22px;
+      background: var(--background);
+      color: var(--foreground);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      outline: none;
+      font-family: inherit;
+      font-size: 15px;
+    }
+
+    input[type="email"]:focus {
+      border-color: var(--ember);
+    }
+
+    footer {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 40px 24px;
+      color: var(--muted-foreground);
+      font-size: 14px;
+    }
+
+    footer .logo {
+      color: var(--foreground);
+      font-size: 20px;
+    }
+
+    @media (min-width: 640px) {
+      form {
+        flex-direction: row;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .split {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (min-width: 1050px) {
+      nav {
+        display: flex;
+      }
+    }
+
+    @media (max-width: 500px) {
+      header .wrap {
+        padding: 10px 14px;
+      }
+
+      .logo-salesianito {
+        width: 45px;
+        height: 45px;
+      }
+
+      .logo {
+        font-size: 21px;
+      }
+
+      .btn.sm {
+        padding: 8px 14px;
+        font-size: 11px;
+      }
+
+      .hero .wrap {
+        padding-top: 150px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- BARRA DE NAVEGACIÓN -->
+
+  <header>
+    <div class="wrap">
+
+      <a class="marca" href="#inicio">
+
+        <img
+          src="salesianito.ico"
+          alt="Logo del Colegio Salesianito"
+          class="logo-salesianito"
+        />
+
+        <span class="logo">
+          parr<span class="ember">-IA</span>
+        </span>
+
+      </a>
+
+      <nav>
+        <a href="#inicio">Inicio</a>
+        <a href="#producto">Producto</a>
+        <a href="#como">Cómo funciona</a>
+        <a href="#objetivos">Objetivos</a>
+        <a href="#recursos">Recursos</a>
+        <a href="#conclusiones">Conclusiones</a>
+        <a href="#quienes-somos">Quiénes somos</a>
+        <a href="#contacto">Contacto</a>
+      </nav>
+
+      <a class="btn sm" href="#contacto">
+        Reservar
+      </a>
+
+    </div>
+  </header>
+
+  <main>
+
+    <!-- INICIO -->
+
+    <section class="hero" id="inicio">
+
+      <img
+        src="hero-parria.jpg"
+        width="1600"
+        height="1104"
+        alt="Termómetro inteligente parr-IA sobre una carne en la parrilla"
+      />
+
+      <div class="smoke"></div>
+
+      <div class="wrap">
+
+        <p class="eyebrow">
+          Microempresa · Tecnología para la parrilla
+        </p>
+
+        <h1>
+          El punto perfecto
+          <span class="ember">deja de ser suerte</span>
+        </h1>
+
+        <p class="lead">
+          parr-IA es un termómetro inteligente que utiliza
+          inteligencia artificial para encontrar el punto de
+          cocción exacto de cada corte de carne. Vos disfrutás
+          del fuego mientras el dispositivo hace los cálculos.
+        </p>
+
+        <div class="problem-box">
+
+          <strong>
+            Problema que buscamos solucionar:
+          </strong>
+
+          muchas personas tienen dificultades para saber cuándo
+          la carne alcanzó el punto correcto de cocción. Esto puede
+          hacer que quede cruda, demasiado cocida o que pierda
+          su sabor y jugosidad.
+
+        </div>
+
+        <div class="actions">
+
+          <a class="btn" href="#contacto">
+            Quiero uno
+          </a>
+
+          <a class="btn ghost" href="#como">
+            Ver cómo funciona
+          </a>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CÓMO FUNCIONA -->
+
+    <section class="pad" id="como">
+      <div class="wrap">
+
+        <h2>Tres pasos, cero adivinanza</h2>
+
+        <div class="grid cols-3">
+
+          <div class="card">
+
+            <span class="num">01</span>
+
+            <h3>Clavá la sonda</h3>
+
+            <p>
+              Insertá el termómetro en la parte más gruesa del
+              corte. Inmediatamente comenzará a medir la temperatura.
+            </p>
+
+          </div>
+
+          <div class="card">
+
+            <span class="num">02</span>
+
+            <h3>Elegí tu punto</h3>
+
+            <p>
+              Seleccioná entre jugoso, a punto o bien cocido.
+              La IA reconoce el corte y ajusta la temperatura.
+            </p>
+
+          </div>
+
+          <div class="card">
+
+            <span class="num">03</span>
+
+            <h3>Esperá el aviso</h3>
+
+            <p>
+              El dispositivo te avisa cuándo dar vuelta y
+              cuándo retirar la carne de la parrilla.
+            </p>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUCTO -->
+
+    <section class="band" id="producto">
+      <div class="wrap split">
+
+        <img
+          src="producto-parria.jpg"
+          width="1200"
+          height="1200"
+          loading="lazy"
+          alt="Termómetro inteligente parr-IA con base de carga"
+        />
+
+        <div>
+
+          <p class="eyebrow">
+            parr-IA One
+          </p>
+
+          <h2>
+            Un solo dispositivo, todos los cortes
+          </h2>
+
+          <p class="lead">
+            La sonda mide la carne y el ambiente al mismo tiempo.
+            El modelo predice la curva de temperatura y te avisa
+            para retirar la carne exactamente en el punto elegido.
+          </p>
+
+          <ul class="points">
+
+            <li>
+              <span>Jugoso</span>
+              <span class="temp">52 °C</span>
+            </li>
+
+            <li>
+              <span>A punto jugoso</span>
+              <span class="temp">57 °C</span>
+            </li>
+
+            <li>
+              <span>A punto</span>
+              <span class="temp">63 °C</span>
+            </li>
+
+            <li>
+              <span>Bien cocido</span>
+              <span class="temp">71 °C</span>
+            </li>
+
+          </ul>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- CARACTERÍSTICAS -->
+
+    <section class="pad">
+      <div class="wrap">
+
+        <h2>Por dentro</h2>
+
+        <div class="grid cols-3">
+
+          <div class="card">
+
+            <div class="bar"></div>
+
+            <h3>IA entrenada en cortes</h3>
+
+            <p>
+              Asado, vacío, tapa de cuadril, pollo o cerdo:
+              el modelo conoce el comportamiento térmico de cada uno.
+            </p>
+
+          </div>
+
+          <div class="card">
+
+            <div class="bar"></div>
+
+            <h3>Precisión de ±0,5 °C</h3>
+
+            <p>
+              Doble sensor para medir la temperatura interna
+              y la temperatura ambiente de la parrilla.
+            </p>
+
+          </div>
+
+          <div class="card">
+
+            <div class="bar"></div>
+
+            <h3>Sin cables ni humo</h3>
+
+            <p>
+              Conexión inalámbrica para seguir toda la cocción
+              directamente desde el celular.
+            </p>
+
+          </div>
+
+          <div class="card">
+
+            <div class="bar"></div>
+
+            <h3>Curva de cocción</h3>
+
+            <p>
+              Guarda cada asado y aprende de los resultados para
+              mejorar las próximas preparaciones.
+            </p>
+
+          </div>
+
+          <div class="card">
+
+            <div class="bar"></div>
+
+            <h3>Resiste el fuego</h3>
+
+            <p>
+              Sonda de acero resistente a altas temperaturas
+              y base de carga con gran autonomía.
+            </p>
+
+          </div>
+
+          <div class="card">
+
+            <div class="bar"></div>
+
+            <h3>Hecho acá</h3>
+
+            <p>
+              Diseñado y desarrollado por estudiantes,
+              especialmente para la parrilla.
+            </p>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- OBJETIVOS -->
+
+    <section class="band pad" id="objetivos">
+      <div class="wrap">
+
+        <p class="eyebrow">
+          Nuestro propósito
+        </p>
+
+        <h2>Objetivos del proyecto</h2>
+
+        <p class="section-description">
+          Nuestro objetivo es utilizar la tecnología para hacer
+          que cocinar carne sea una experiencia más sencilla,
+          precisa y segura.
+        </p>
+
+        <div class="grid cols-2">
+
+          <div class="card">
+
+            <div class="bar"></div>
+
+            <h3>Objetivo general</h3>
+
+            <p>
+              Desarrollar un termómetro inteligente que trabaje
+              con inteligencia artificial para identificar el
+              punto ideal de cocción de diferentes cortes de carne.
+            </p>
+
+          </div>
+
+          <div class="card">
+
+            <div class="bar"></div>
+
+            <h3>Objetivos específicos</h3>
+
+            <ul class="objective-list">
+              <li>Medir la temperatura interna de la carne.</li>
+              <li>Identificar diferentes tipos de cortes.</li>
+              <li>Reconocer distintos puntos de cocción.</li>
+              <li>Brindar información clara y rápida.</li>
+              <li>Evitar que la carne quede cruda o muy cocida.</li>
+              <li>Aplicar inteligencia artificial en la cocina.</li>
+            </ul>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- RECURSOS -->
+
+    <section class="pad" id="recursos">
+      <div class="wrap">
+
+        <p class="eyebrow">
+          Lo que necesitamos
+        </p>
+
+        <h2>Recursos</h2>
+
+        <p class="section-description">
+          Para desarrollar el producto necesitamos combinar
+          recursos tecnológicos, materiales y humanos.
+        </p>
+
+        <div class="grid cols-3">
+
+          <div class="card">
+
+            <span class="num">01</span>
+
+            <h3>Recursos tecnológicos</h3>
+
+            <p>
+              Sensores de temperatura, inteligencia artificial,
+              computadoras, internet y programas de desarrollo.
+            </p>
+
+          </div>
+
+          <div class="card">
+
+            <span class="num">02</span>
+
+            <h3>Recursos materiales</h3>
+
+            <p>
+              Prototipo del termómetro, componentes electrónicos,
+              cables, herramientas y materiales de prueba.
+            </p>
+
+          </div>
+
+          <div class="card">
+
+            <span class="num">03</span>
+
+            <h3>Recursos humanos</h3>
+
+            <p>
+              Los cuatro integrantes de la microempresa,
+              encargados de investigar, diseñar, programar,
+              probar y presentar el producto.
+            </p>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- CONCLUSIONES -->
+
+    <section class="band pad" id="conclusiones">
+      <div class="wrap">
+
+        <p class="eyebrow">
+          Resultado del proyecto
+        </p>
+
+        <h2>Conclusiones</h2>
+
+        <div class="conclusion">
+
+          <p>
+            parr-IA es una propuesta innovadora que combina la
+            tecnología, la inteligencia artificial y la cocina.
+            El termómetro inteligente permite controlar mejor
+            la preparación de la carne y conseguir resultados
+            más precisos.
+          </p>
+
+          <p>
+            Con este proyecto buscamos demostrar que la inteligencia
+            artificial también puede utilizarse para solucionar
+            problemas cotidianos y mejorar la experiencia de las
+            personas al cocinar.
+          </p>
+
+          <p>
+            El producto también puede ayudar a evitar el desperdicio
+            de alimentos y facilitar la preparación de diferentes
+            cortes de carne.
+          </p>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- QUIÉNES SOMOS -->
+
+    <section class="pad" id="quienes-somos">
+      <div class="wrap">
+
+        <p class="eyebrow">
+          El equipo
+        </p>
+
+        <h2>Quiénes somos</h2>
+
+        <p class="section-description">
+          Somos una microempresa formada por estudiantes que busca
+          innovar mediante la creación de productos tecnológicos
+          útiles para la vida cotidiana.
+        </p>
+
+        <div class="grid cols-4">
+
+          <div class="card member-card">
+
+            <div> <img src="IMG_5644.ico" alt="Foto de Thiago"></div>
+
+            <h3>Thiago González</h3>
+
+            <p class="member-role">
+              Coordinación y desarrollo web
+            </p>
+
+            <p>
+              Participa en la organización del proyecto y en
+              la creación de la página web de parr-IA.
+            </p>
+
+          </div>
+
+          <div class="card member-card">
+
+            <div class="member-icon">
+              TP
+            </div>
+
+            <h3>Tobías Páez</h3>
+
+            <p class="member-role">
+              Investigación y diseño
+            </p>
+
+            <p>
+              Colabora en la investigación y en el diseño
+              del termómetro inteligente.
+            </p>
+
+          </div>
+
+          <div class="card member-card">
+
+            <div class="member-icon">
+              OF
+            </div>
+
+            <h3>Oscar Fernández</h3>
+
+            <p class="member-role">
+              Tecnología y programación
+            </p>
+
+            <p>
+              Participa en el desarrollo tecnológico y en el
+              funcionamiento del sistema.
+            </p>
+
+          </div>
+
+          <div class="card member-card">
+
+            <div class="member-icon">
+              AR
+            </div>
+
+            <h3>Augusto Riquelme</h3>
+
+            <p class="member-role">
+              Pruebas y documentación
+            </p>
+
+            <p>
+              Colabora con las pruebas, la documentación
+              y la presentación del proyecto.
+            </p>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACTO -->
+
+    <section class="band" id="contacto">
+
+      <div
+        class="wrap center"
+        style="max-width: 720px; padding: 96px 24px"
+      >
+
+        <h2>Sumate a la primera tanda</h2>
+
+        <p
+          class="lead"
+          style="margin: 16px auto 0"
+        >
+          Dejanos tu correo y te avisamos cuando abramos
+          las reservas de parr-IA One.
+        </p>
+
+        <form
+          onsubmit="
+            event.preventDefault();
+            this.reset();
+            alert('¡Gracias! Te avisamos.');
+          "
+        >
+
+          <input
+            type="email"
+            required
+            placeholder="tu@correo.com"
+            aria-label="Tu correo electrónico"
+          />
+
+          <button
+            class="btn"
+            type="submit"
+            style="
+              border: 0;
+              font-family: inherit;
+              cursor: pointer;
+            "
+          >
+            Avisame
+          </button>
+
+        </form>
+
+        <p
+          style="
+            margin-top: 40px;
+            font-size: 14px;
+            color: var(--muted-foreground);
+          "
+        >
+          hola@parr-ia.com · Asunción, Paraguay
+        </p>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- PIE DE PÁGINA -->
+
+  <footer>
+
+    <span class="logo">
+      parr<span class="ember">-IA</span>
+    </span>
+
+    <p>
+      © 2026 parr-IA. Fuego con inteligencia.
+    </p>
+
+  </footer>
+
+</body>
+</html>
